@@ -31,12 +31,19 @@
         #categoryFilter {
             margin: 10px 0;
         }
+        select {
+            padding: 8px;
+            margin-left: 10px;
+        }
     </style>
 </head>
 <body>
     <h1>Dynamic Quote Generator</h1>
     <div id="quoteDisplay"></div>
-    <div id="categoryFilter"></div>
+    <div id="categoryFilter">
+        <label for="categorySelect">Filter by category: </label>
+        <select id="categorySelect" onchange="filterQuotes()"></select>
+    </div>
     <button id="newQuote">Show New Quote</button>
     <div id="quoteFormContainer"></div>
     <div>

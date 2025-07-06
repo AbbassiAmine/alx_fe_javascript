@@ -27,6 +27,18 @@ function saveQuotes() {
     }
 }
 
+function loadLastCategory() {
+    return localStorage.getItem('lastCategory') || 'all';
+}
+
+function saveLastCategory(category) {
+    try {
+        localStorage.setItem('lastCategory', category);
+    } catch (e) {
+        console.error('Error saving last category to localStorage:', e);
+    }
+}
+
 function showRandomQuote() {
     const quoteDisplay = document.getElementById('quoteDisplay');
     const category = document.getElementById('categorySelect')?.value || 'all';
@@ -74,13 +86,12 @@ function showRandomQuote() {
     quoteDisplay.appendChild(categoryText);
 }
 
-function createCategoryFilter() {
+function populateCategories() {
     const categories = ['all', ...new Set(quotes.map(quote => quote.category))];
-    const filterContainer = document.getElementById('categoryFilter');
+    const select = document.getElementById('categorySelect');
     
-    // Create select element
-    const select = document.createElement('select');
-    select.id = 'categorySelect';
+    // Clear existing options
+    select.innerHTML = '';
     
     // Add options
     categories.forEach(category => {
@@ -90,12 +101,15 @@ function createCategoryFilter() {
         select.appendChild(option);
     });
     
-    // Clear previous filter and append new select
-    filterContainer.innerHTML = 'Filter by category: ';
-    filterContainer.appendChild(select);
-    
-    // Add change event listener
-    select.addEventListener('change', showRandomQuote);
+    // Restore last selected category
+    const lastCategory = loadLastCategory();
+    select.value = lastCategory;
+}
+
+function filterQuotes() {
+    const selectedCategory = document.getElementById('categorySelect').value;
+    saveLastCategory(selectedCategory);
+    showRandomQuote();
 }
 
 function createAddQuoteForm() {
@@ -144,7 +158,7 @@ function addQuote() {
         document.getElementById('newQuoteCategory').value = '';
         
         // Update category filter
-        createCategoryFilter();
+        populateCategories();
         
         // Show the newly added quote
         showRandomQuote();
@@ -182,7 +196,7 @@ function importFromJsonFile(event) {
             if (Array.isArray(importedQuotes) && importedQuotes.every(q => q.text && q.category)) {
                 quotes.push(...importedQuotes);
                 saveQuotes();
-                createCategoryFilter();
+                populateCategories();
                 showRandomQuote();
                 alert('Quotes imported successfully!');
             } else {
@@ -201,7 +215,7 @@ document.addEventListener('DOMContentLoaded', () => {
     loadQuotes();
     
     // Create category filter
-    createCategoryFilter();
+    populateCategories();
     
     // Create quote form
     createAddQuoteForm();
