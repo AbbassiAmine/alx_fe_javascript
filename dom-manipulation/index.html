@@ -35,11 +35,34 @@
             padding: 8px;
             margin-left: 10px;
         }
+        #notificationArea {
+            margin: 10px 0;
+            padding: 10px;
+            background-color: #f0f0f0;
+            border-radius: 5px;
+            display: none;
+        }
+        #conflictModal {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            padding: 20px;
+            border: 1px solid #ccc;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            z-index: 1000;
+        }
+        #conflictModal button {
+            margin-top: 10px;
+        }
     </style>
 </head>
 <body>
     <h1>Dynamic Quote Generator</h1>
     <div id="quoteDisplay"></div>
+    <div id="notificationArea"></div>
     <div id="categoryFilter">
         <label for="categoryFilter">Filter by category: </label>
         <select id="categoryFilter" onchange="filterQuotes()"></select>
@@ -49,6 +72,12 @@
     <div>
         <button onclick="exportToJsonFile()">Export Quotes</button>
         <input type="file" id="importFile" accept=".json" onchange="importFromJsonFile(event)" />
+    </div>
+    <div id="conflictModal">
+        <h3>Conflict Detected</h3>
+        <p id="conflictMessage"></p>
+        <button onclick="resolveConflict('server')">Use Server Data</button>
+        <button onclick="resolveConflict('local')">Use Local Data</button>
     </div>
     <script src="script.js"></script>
 </body>
