@@ -5,6 +5,28 @@ let quotes = [
     { text: "The journey of a thousand miles begins with a single step.", category: "Wisdom" }
 ];
 
+function loadQuotes() {
+    const storedQuotes = localStorage.getItem('quotes');
+    if (storedQuotes) {
+        try {
+            const parsedQuotes = JSON.parse(storedQuotes);
+            if (Array.isArray(parsedQuotes)) {
+                quotes = parsedQuotes;
+            }
+        } catch (e) {
+            console.error('Error loading quotes from localStorage:', e);
+        }
+    }
+}
+
+function saveQuotes() {
+    try {
+        localStorage.setItem('quotes', JSON.stringify(quotes));
+    } catch (e) {
+        console.error('Error saving quotes to localStorage:', e);
+    }
+}
+
 function showRandomQuote() {
     const quoteDisplay = document.getElementById('quoteDisplay');
     const category = document.getElementById('categorySelect')?.value || 'all';
@@ -17,6 +39,13 @@ function showRandomQuote() {
 
     const randomIndex = Math.floor(Math.random() * filteredQuotes.length);
     const quote = filteredQuotes[randomIndex];
+    
+    // Save last viewed quote to session storage
+    try {
+        sessionStorage.setItem('lastQuote', JSON.stringify(quote));
+    } catch (e) {
+        console.error('Error saving last quote to sessionStorage:', e);
+    }
     
     // Create quote element
     const quoteElement = document.createElement('div');
@@ -31,6 +60,13 @@ function showRandomQuote() {
     const categoryText = document.createElement('p');
     categoryText.textContent = `Category: ${quote.category}`;
     categoryText.style.fontWeight = 'bold';
+    
+    // Display last viewed quote from session storage (if available and matches category)
+    const lastQuote = JSON.parse(sessionStorage.getItem('lastQuote'));
+    if (lastQuote && (category === 'all' || lastQuote.category === category)) {
+        quoteText.textContent = `"${lastQuote.text}"`;
+        categoryText.textContent = `Category: ${lastQuote.category} (Last Viewed)`;
+    }
     
     // Clear previous content and append new elements
     quoteDisplay.innerHTML = '';
@@ -100,6 +136,9 @@ function addQuote() {
         // Add new quote to array
         quotes.push({ text: quoteText, category: quoteCategory });
         
+        // Save to local storage
+        saveQuotes();
+        
         // Clear input fields
         document.getElementById('newQuoteText').value = '';
         document.getElementById('newQuoteCategory').value = '';
@@ -121,8 +160,46 @@ function addQuote() {
     }
 }
 
+function exportToJsonFile() {
+    const jsonStr = JSON.stringify(quotes, null, 2);
+    const blob = new Blob([jsonStr], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = 'quotes.json';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+}
+
+function importFromJsonFile(event) {
+    const fileReader = new FileReader();
+    fileReader.onload = function(event) {
+        try {
+            const importedQuotes = JSON.parse(event.target.result);
+            // Validate imported quotes
+            if (Array.isArray(importedQuotes) && importedQuotes.every(q => q.text && q.category)) {
+                quotes.push(...importedQuotes);
+                saveQuotes();
+                createCategoryFilter();
+                showRandomQuote();
+                alert('Quotes imported successfully!');
+            } else {
+                alert('Invalid JSON format: Quotes must be an array of objects with text and category properties.');
+            }
+        } catch (e) {
+            alert('Error importing quotes: Invalid JSON file.');
+        }
+    };
+    fileReader.readAsText(event.target.files[0]);
+}
+
 // Initialize the application
 document.addEventListener('DOMContentLoaded', () => {
+    // Load quotes from local storage
+    loadQuotes();
+    
     // Create category filter
     createCategoryFilter();
     
