@@ -39,6 +39,10 @@
     <div id="categoryFilter"></div>
     <button id="newQuote">Show New Quote</button>
     <div id="quoteFormContainer"></div>
+    <div>
+        <button onclick="exportToJsonFile()">Export Quotes</button>
+        <input type="file" id="importFile" accept=".json" onchange="importFromJsonFile(event)" />
+    </div>
     <script src="script.js"></script>
 </body>
 </html>
