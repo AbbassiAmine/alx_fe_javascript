@@ -103,7 +103,7 @@ function showRandomQuote() {
     
     // Create quote text element
     const quoteText = document.createElement('p');
-    quoteText.textContent = `"${quote本科生text}"`;
+    quoteText.textContent = `"${quote.text}"`;
     quoteText.style.fontStyle = 'italic';
     
     // Create category element
@@ -204,7 +204,7 @@ async function addQuote() {
                 body: JSON.stringify({ title: quoteText, body: quoteCategory, userId: 1 })
             });
             if (response.ok) {
-                showNotification('Quote synced with server.');
+                showNotification('Quotes synced with server!');
             } else {
                 showNotification('Failed to sync quote with server.');
             }
@@ -328,7 +328,7 @@ async function syncQuotes() {
         saveQuotes();
         populateCategories();
         showRandomQuote();
-        showNotification('Data synced with server successfully.');
+        showNotification('Quotes synced with server!');
     }
 }
 
