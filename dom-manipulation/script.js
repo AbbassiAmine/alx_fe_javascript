@@ -62,6 +62,36 @@ function createCategoryFilter() {
     select.addEventListener('change', showRandomQuote);
 }
 
+function createAddQuoteForm() {
+    const formContainer = document.getElementById('quoteFormContainer');
+    
+    // Create form elements
+    const formDiv = document.createElement('div');
+    
+    const quoteInput = document.createElement('input');
+    quoteInput.id = 'newQuoteText';
+    quoteInput.type = 'text';
+    quoteInput.placeholder = 'Enter a new quote';
+    
+    const categoryInput = document.createElement('input');
+    categoryInput.id = 'newQuoteCategory';
+    categoryInput.type = 'text';
+    categoryInput.placeholder = 'Enter quote category';
+    
+    const addButton = document.createElement('button');
+    addButton.textContent = 'Add Quote';
+    addButton.addEventListener('click', addQuote);
+    
+    // Append elements to form div
+    formDiv.appendChild(quoteInput);
+    formDiv.appendChild(categoryInput);
+    formDiv.appendChild(addButton);
+    
+    // Clear container and append form
+    formContainer.innerHTML = '';
+    formContainer.appendChild(formDiv);
+}
+
 function addQuote() {
     const quoteText = document.getElementById('newQuoteText').value.trim();
     const quoteCategory = document.getElementById('newQuoteCategory').value.trim();
@@ -95,6 +125,9 @@ function addQuote() {
 document.addEventListener('DOMContentLoaded', () => {
     // Create category filter
     createCategoryFilter();
+    
+    // Create quote form
+    createAddQuoteForm();
     
     // Show initial random quote
     showRandomQuote();
