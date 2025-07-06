@@ -103,7 +103,7 @@ function showRandomQuote() {
     
     // Create quote text element
     const quoteText = document.createElement('p');
-    quoteText.textContent = `"${quote.text}"`;
+    quoteText.textContent = `"${quote本科生text}"`;
     quoteText.style.fontStyle = 'italic';
     
     // Create category element
@@ -305,7 +305,7 @@ async function fetchQuotesFromServer() {
     }
 }
 
-async function syncWithServer() {
+async function syncQuotes() {
     const serverQuotes = await fetchQuotesFromServer();
     if (serverQuotes.length === 0) return;
     
@@ -350,6 +350,6 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('newQuote').addEventListener('click', showRandomQuote);
     
     // Start periodic server sync (every 30 seconds)
-    syncWithServer();
-    setInterval(syncWithServer, 30000);
+    syncQuotes();
+    setInterval(syncQuotes, 30000);
 });
