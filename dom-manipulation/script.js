@@ -41,7 +41,7 @@ function saveLastCategory(category) {
 
 function showRandomQuote() {
     const quoteDisplay = document.getElementById('quoteDisplay');
-    const category = document.getElementById('categorySelect')?.value || 'all';
+    const category = document.getElementById('categoryFilter')?.value || 'all';
     const filteredQuotes = category === 'all' ? quotes : quotes.filter(quote => quote.category === category);
     
     if (filteredQuotes.length === 0) {
@@ -88,7 +88,7 @@ function showRandomQuote() {
 
 function populateCategories() {
     const categories = ['all', ...new Set(quotes.map(quote => quote.category))];
-    const select = document.getElementById('categorySelect');
+    const select = document.getElementById('categoryFilter');
     
     // Clear existing options
     select.innerHTML = '';
@@ -107,7 +107,7 @@ function populateCategories() {
 }
 
 function filterQuotes() {
-    const selectedCategory = document.getElementById('categorySelect').value;
+    const selectedCategory = document.getElementById('categoryFilter').value;
     saveLastCategory(selectedCategory);
     showRandomQuote();
 }
